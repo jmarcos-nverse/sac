@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+    <f:view contentType="text/html; charset=ISO-8859-1">  
+        <h:head>
+            <title>Sistema de Atendimento ao Consumidor - NVERSE</title>
+            <link type="text/css" rel="stylesheet" href="jquery-ui-1.10.3.custom.css" />
+        </h:head>
+        <h:body >
+            <h:form acceptcharset="ISO-8859-1" style="font-size: 80%; ">
+                
+                    <ui:insert name="topo">
+                        <p:panel style="border: none; " >
+                            <p:commandLink  update="@all">
+                                <p:graphicImage value="/images/custom/logo completa.png" width="500" />
+                            </p:commandLink>
+                        </p:panel>
+                    </ui:insert>
+                    <ui:insert name="menu" >
+                        <p:menubar model="#{menuCtrl.menu}" rendered="true" styleClass="menuNverse"
+                                   />
+                    </ui:insert>
+                    <ui:insert name="mensagem" >
+                        <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+                    </ui:insert>
+                    <ui:insert name="content" >
+                    </ui:insert>
+                    <ui:insert name="footer">
+                        <p:outputLabel value="NVERSE Soluções Tecnológicas" />
+                    </ui:insert>
+                
+            </h:form>
+        </h:body>
+    </f:view>
+</html>

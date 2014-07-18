@@ -1,0 +1,349 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+
+<ui:composition 
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:f="http://java.sun.com/jsf/core">
+
+    <f:view contentType="text/html; charset=ISO-8859-1">  
+
+        <p:fieldset id="fieldSet" toggleable="true" legend="Dados do Cliente" styleClass="default" >
+            <p:panelGrid >
+                <p:row>
+                    <p:column>
+                        <p:outputLabel value="Código:" style="text-align: right"/>
+                    </p:column>
+                    <p:column>
+                        <p:inputText value="#{clienteCtrl.cliente.codigo}" size="10"
+                                     readonly="#{clienteCtrl.visualizarState}"/>
+                    </p:column>
+                    <p:column>
+                        <p:outputLabel value="Data de Cadastro:"/>
+                    </p:column>
+                    <p:column >
+                        <p:inputMask mask="99/99/9999" value="#{clienteCtrl.dataCadastro}"
+                                     size="10"  readonly="#{clienteCtrl.visualizarState}"/>
+                    </p:column>
+
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <p:outputLabel value="CPF/CNPJ:"/>
+                    </p:column>
+                    <p:column >
+                        <p:inputMask mask="99.999.999/9999-99" value="#{clienteCtrl.cliente.cpfcnpj}"
+                                     valueChangeListener="#{clienteCtrl.validateCnpj}"  readonly="#{clienteCtrl.visualizarState}">
+                            <f:ajax  event="blur" render="nameError" />
+                        </p:inputMask>
+                    </p:column>
+                    <p:column colspan="2">
+                        <h:outputText id="nameError" value="#{clienteCtrl.nameErro}"
+                                      style="color: green;font-style: italic; font-size: 90%" />
+                    </p:column>
+
+
+
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <p:outputLabel value="Razão Social:"/>
+                    </p:column>
+                    <p:column colspan="6">
+                        <p:inputText value="#{clienteCtrl.cliente.razaoSocial}"
+                                     size="81" readonly="#{clienteCtrl.visualizarState}"/>
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <p:outputLabel value="Nome Fantasia:"/>
+                    </p:column>
+                    <p:column colspan="6">
+                        <p:inputText value="#{clienteCtrl.cliente.nome}" size="81"
+                                     readonly="#{clienteCtrl.visualizarState}"/>
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <p:outputLabel value="Observações:"/>
+                    </p:column>
+                    <p:column colspan="5">
+                        <p:inputTextarea value="#{clienteCtrl.cliente.observacoes}"
+                                         cols="85" rows="4" autoResize="false"
+                                         readonly="#{clienteCtrl.visualizarState}"/>
+                    </p:column>
+                </p:row>
+            </p:panelGrid>
+
+        </p:fieldset>
+        <p:spacer/>
+        <p:fieldset legend="Dados do Contrato" toggleable="true">
+            <p:panelGrid >
+                <p:row>
+                    <p:column>
+                        <p:outputLabel value="Número Contrato:"/>
+                    </p:column>
+                    <p:column>
+                        <p:inputText value="#{clienteCtrl.contrato.numeroContrato}"
+                                     size="20" readonly="#{clienteCtrl.visualizarState || clienteCtrl.editarState}"/>
+                    </p:column>
+                    <p:column>
+                        <p:selectOneMenu value="#{clienteCtrl.situacaoContrato}" rendered="#{!clienteCtrl.visualizarState}"
+                                         required="true" requiredMessage="Selecione a Situação Contratual" >
+                            <f:selectItem itemLabel="----" itemValue="#{null}" />
+                            <f:selectItems value="#{clienteCtrl.sitsContrato}" var="sit"  />
+                        </p:selectOneMenu>
+                        <p:inputText readonly="true" value="#{clienteCtrl.contrato.situacao.valor}" rendered="#{clienteCtrl.visualizarState}" />
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <p:outputLabel value="Atendente:"/>
+                    </p:column>
+                    <p:column colspan="3">
+                        <p:inputText value="#{clienteCtrl.contrato.atendente}"
+                                     size="30" readonly="#{clienteCtrl.visualizarState || clienteCtrl.editarState}"/>
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <p:outputLabel value="Valor por ônibus:"/>
+                    </p:column>
+                    <p:column>
+                        <p:inputText value="#{clienteCtrl.contrato.valorPorVeiculo}" 
+                                     readonly="#{clienteCtrl.visualizarState}">
+                            <f:ajax  event="blur" render="valrTotal" />
+                        </p:inputText>
+                    </p:column>
+                    <p:column>
+                        <p:outputLabel  value="Valor Total:" />
+                    </p:column>
+                    <p:column>
+                        <p:inputText id="valrTotal"
+                                     value="#{clienteCtrl.valorTotal}"
+                                     readonly="true" />
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <p:outputLabel value="Data Início:"/>
+                    </p:column>
+                    <p:column>
+                        <p:calendar value="#{clienteCtrl.contrato.dataInicio}"
+                                    valueChangeListener="#{clienteCtrl.setDatFim}"
+                                    readonly="#{clienteCtrl.visualizarState}"
+                                    pattern="dd/MM/yyyy">
+                            <f:ajax event="blur" render="datFim" />
+                        </p:calendar>
+                    </p:column>
+                    <p:column><p:outputLabel value="Data Fim:"/></p:column>
+                    <p:column>
+                        <p:calendar id="datFim" value="#{clienteCtrl.contrato.dataFim}"
+                                    readonly="#{clienteCtrl.visualizarState}"
+                                    pattern="dd/MM/yyyy" />
+                    </p:column>
+
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <h:outputText value="Vencimento:" />
+                    </p:column>
+                    <p:column colspan="3">
+                        <p:selectOneRadio id="optVenc" value="#{clienteCtrl.parcela}"
+                                          disabled="#{clienteCtrl.visualizarState}">
+                            <f:selectItems value="#{clienteCtrl.diasPagamento}"  />
+                        </p:selectOneRadio> 
+                    </p:column>
+                </p:row>
+
+                <p:row>
+                    <p:column colspan="4">
+                        <p:commandButton value="Confirmar Alteração Contratual" action="#{clienteCtrl.adicionaContratoAtual()}" rendered="#{clienteCtrl.editarState}"/>
+                    </p:column>
+                </p:row>
+            </p:panelGrid>
+        </p:fieldset>
+        <p:spacer/>
+        <p:fieldset legend="Contato" toggleable="true" >
+            <p:panelGrid columns="6"  style="font-size: 95%" >
+                <p:outputLabel value="Telefone 1:"/>
+                <p:inputMask mask="(99)9999-9999" value="#{clienteCtrl.cliente.contato.telefone1}"
+                             readonly="#{clienteCtrl.visualizarState}"/>
+                <p:outputLabel value="Telefone 2:"/>
+                <p:inputMask mask="(99)9999-9999" value="#{clienteCtrl.cliente.contato.telefone2}"
+                             readonly="#{clienteCtrl.visualizarState}"/>
+                <p:outputLabel value="Telefone 3:"/>
+                <p:inputMask mask="(99)9999-9999" value="#{clienteCtrl.cliente.contato.telefone3}"
+                             readonly="#{clienteCtrl.visualizarState}"/>
+                <p:outputLabel value="E-Mail:"/>
+                <p:inputText value="#{clienteCtrl.cliente.contato.email}"
+                             readonly="#{clienteCtrl.visualizarState}"/>
+            </p:panelGrid>
+        </p:fieldset>
+        <p:spacer/>
+        <p:fieldset legend="Endereço Principal" toggleable="true" >
+            <p:panelGrid >
+
+                <p:row >
+                    <p:column >
+                        <p:outputLabel value="CEP:"/>
+                    </p:column>
+                    <p:column>
+                        <p:inputMask value="#{clienteCtrl.cliente.enderecoPrimario.cep}"
+                                     mask="99 999-999" size="10" style="text-align: right"
+                                     readonly="#{clienteCtrl.visualizarState}"/>
+                    </p:column>
+                    <!--                    <p:column>
+                                            <p:commandButton icon="ui-icon-search"
+                                                             value="" iconPos="center"
+                                                             style="height: 25px ; width: 30px"/>
+                                        </p:column>
+                                        <p:column>
+                                            <p:outputLabel value="Correspondência:"/>
+                                        </p:column>
+                                        <p:column>
+                                            <p:selectBooleanCheckbox value="#{clienteCtrl.cliente.enderecoPrimario.correspondencia}" />
+                                        </p:column>-->
+
+                    <p:column>
+                        <p:outputLabel value="Município:"/>
+                    </p:column>
+                    <p:column>
+                        <p:inputText value="#{clienteCtrl.cliente.enderecoPrimario.cidade}"
+                                     size="30" readonly="#{clienteCtrl.visualizarState}"/>
+                    </p:column>
+                    <p:column>
+                        <p:spacer/>
+                    </p:column>
+                    <p:column>
+                        <p:outputLabel value="UF:"/>
+                    </p:column>
+                    <p:column>
+                        <p:selectOneMenu value="#{clienteCtrl.cliente.enderecoPrimario.uf}" rendered="#{!clienteCtrl.visualizarState}"
+                                         required="true"  style="width: 50px"  
+                                         requiredMessage="Selecione um estado para o endereço primário">
+                            <f:selectItem itemLabel="---" itemValue="#{null}" />
+                            <f:selectItems value="#{clienteCtrl.ufs}" var="uf"  />
+                        </p:selectOneMenu>
+                        <p:inputText size="5" readonly="true" value="#{clienteCtrl.cliente.enderecoPrimario.uf}" rendered="#{clienteCtrl.visualizarState}" />
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <p:outputLabel value="Bairro:"/>
+                    </p:column>
+                    <p:column colspan="4">
+                        <p:inputText value="#{clienteCtrl.cliente.enderecoPrimario.bairro}"
+                                     size="70" readonly="#{clienteCtrl.visualizarState}"/>
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <p:outputLabel value="Logradouro:"/>
+                    </p:column>
+                    <p:column colspan="4">
+                        <p:inputText value="#{clienteCtrl.cliente.enderecoPrimario.logradouro}"
+                                     size="70"  readonly="#{clienteCtrl.visualizarState}"/>
+                    </p:column>
+                </p:row>
+            </p:panelGrid>
+        </p:fieldset>
+        <p:spacer/>
+        <p:fieldset legend="Endereço Secundário" toggleable="true" id="fieldSetEndCorresp"  >
+            <p:panelGrid style="font-size: 95%;" >
+
+                <p:row >
+                    <p:column >
+                        <p:outputLabel value="CEP:"/>
+                    </p:column>
+                    <p:column>
+                        <p:inputMask value="#{clienteCtrl.cliente.enderecoSecundario.cep}"
+                                     mask="99 999-999" size="10" style="text-align: right" readonly="#{clienteCtrl.visualizarState}"/>
+                    </p:column>
+                    <!--                    <p:column>
+                                            <p:commandButton icon="ui-icon-search"
+                                                             value="#{clienteCtrl.cliente.enderecoSecundario.cep}" iconPos="center"
+                                                             style="height: 25px ; width: 30px"/>
+                                        </p:column>
+                                        <p:column>
+                                            <p:outputLabel value="Correspondência:"/>
+                                        </p:column>
+                                        <p:column>
+                                            <p:selectBooleanCheckbox value="#{clienteCtrl.cliente.enderecoSecundario.correspondencia}" />
+                                        </p:column>-->
+
+                    <p:column>
+                        <p:outputLabel value="Município:"/>
+                    </p:column>
+                    <p:column>
+                        <p:inputText value="#{clienteCtrl.cliente.enderecoSecundario.cidade}"
+                                     size="30" readonly="#{clienteCtrl.visualizarState}"/>
+                    </p:column>
+                    <p:column>
+                        <p:spacer/>
+                    </p:column>
+                    <p:column>
+                        <p:outputLabel value="UF:"/>
+                    </p:column>
+                    <p:column>
+                        <p:selectOneMenu value="#{clienteCtrl.cliente.enderecoSecundario.uf}"  rendered="#{!clienteCtrl.visualizarState}"
+
+                                         style="width: 50px; " panelStyle="height: 100px ">
+                            <f:selectItem itemLabel="---" itemValue="#{null}" />
+                            <f:selectItems value="#{clienteCtrl.ufs}" var="uf" />
+                        </p:selectOneMenu>
+                        <p:inputText size="5" readonly="true" value="#{clienteCtrl.cliente.enderecoSecundario.uf}"
+                                     rendered="#{clienteCtrl.visualizarState}" />
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <p:outputLabel value="Bairro:"/>
+                    </p:column>
+                    <p:column colspan="4">
+                        <p:inputText value="#{clienteCtrl.cliente.enderecoSecundario.bairro}"
+                                     size="70" readonly="#{clienteCtrl.visualizarState}"/>
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <p:outputLabel value="Logradouro:"/>
+                    </p:column>
+                    <p:column colspan="4">
+                        <p:inputText value="#{clienteCtrl.cliente.enderecoSecundario.logradouro}" 
+                                     readonly="#{clienteCtrl.visualizarState}" size="70"/>
+                    </p:column>
+                </p:row>
+            </p:panelGrid>
+        </p:fieldset>
+
+        <p:commandButton value="Adicionar" ajax="false" 
+                         id="btnAdd" action="#{clienteCtrl.salvarEntidade()}"
+                         update="@form"  rendered="#{clienteCtrl.adicionarState}"/>
+        <p:commandButton value="Editar"
+                         id="btnEdit" onclick="dlg.show();" rendered="#{clienteCtrl.editarState}"/>
+        <p:commandButton value="Remover" action="#{clienteCtrl.removerCliente()}"
+                         ajax="false" update="@form" rendered="#{clienteCtrl.editarState}" />
+        <p:commandButton value="Voltar" action="#{clienteCtrl.prepararPesquisar()}"
+                         ajax="false" update="@form"
+                         rendered="#{clienteCtrl.editarState || clienteCtrl.visualizarState}" />
+
+        <p:dialog id="modalDialog" header="Confirme Edição" widgetVar="dlg"
+                  modal="true" closable="true" >  
+            <p:panelGrid columns="2">
+                <p:outputLabel value="Solicitante:"/>
+                <p:inputText value="#{clienteCtrl.solicitante}" size="100"/>
+                <p:outputLabel value="Atendente:"/>
+                <p:inputText value="#{clienteCtrl.atendente}" size="100"/>
+                <p:outputLabel value="Descrição:"/>
+                <p:inputTextarea value="#{clienteCtrl.descHistorico}" cols="100" readonly="true"/>
+
+
+                <p:commandButton value="Confirma" ajax="false" 
+                                 id="btnConf" action="#{clienteCtrl.salvarEntidade()}"
+                                 update="@form" />
+                <p:commandButton value="Cancelar" update="modalDialog" />
+            </p:panelGrid>
+        </p:dialog>
+    </f:view>
+</ui:composition>

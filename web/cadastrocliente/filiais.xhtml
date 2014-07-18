@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+
+<ui:composition 
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:f="http://java.sun.com/jsf/core">
+
+    <p:fieldset legend="Dados da Filial">
+        <h:panelGrid columns="2" >
+
+            <p:outputLabel value="CPF/CNPJ:"/>
+            <p:inputMask value="#{clienteCtrl.filial.cpfcnpj}" mask="99.999.999/9999-99"
+                             valueChangeListener="#{clienteCtrl.validateCnpj}" readonly="#{clienteCtrl.visualizarState}">
+                    <f:ajax  event="blur" render="nameErrorFil" />
+                </p:inputMask>
+                <p:spacer/>
+                <h:outputText id="nameErrorFil" value="#{clienteCtrl.nameErro}"
+                              style="color: green;font-style: italic; font-size: 90%" />
+            <p:outputLabel value="Razão Social:"/>
+            <p:inputText value="#{clienteCtrl.filial.razaoSocial}" readonly="#{clienteCtrl.visualizarState}"/>
+            <p:outputLabel value="Nome Fantasia:"/>
+            <p:inputText value="#{clienteCtrl.filial.nome}" readonly="#{clienteCtrl.visualizarState}"/>
+
+
+        </h:panelGrid>
+    </p:fieldset>
+
+    <p:fieldset legend="Contato">
+        <h:panelGrid columns="6" >
+            <p:outputLabel value="Telefone 1:"/>
+            <p:inputMask value="#{clienteCtrl.filial.contato.telefone1}" mask="(99)9999-9999" readonly="#{clienteCtrl.visualizarState}"/>
+            <p:outputLabel value="Telefone 2:"/>
+            <p:inputMask value="#{clienteCtrl.filial.contato.telefone2}" mask="(99)9999-9999" readonly="#{clienteCtrl.visualizarState}"/>
+            <p:outputLabel value="Telefone 3:"/>
+            <p:inputMask value="#{clienteCtrl.filial.contato.telefone3}" mask="(99)9999-9999" readonly="#{clienteCtrl.visualizarState}"/>
+            <p:outputLabel value="E-Mail:"/>
+            <p:inputText value="#{clienteCtrl.filial.contato.email}" readonly="#{clienteCtrl.visualizarState}"/>
+        </h:panelGrid>
+    </p:fieldset>
+
+    <p:commandButton value="Gravar" ajax="false" action="#{clienteCtrl.adicionaFilialAtual()}"  rendered="#{!clienteCtrl.visualizarState}" />
+    <p:commandButton value="Limpar" action="#{clienteCtrl.limpaFilialAtual()}" update="@form"  rendered="#{!clienteCtrl.visualizarState}"  />
+
+
+    <p:dataTable value="#{clienteCtrl.cliente.filiais}" var="fil" emptyMessage="Não há nenhuma Filial cadastrada para esse cliente">
+        <f:facet name="header" >
+            <p:outputLabel value="Filiais Cadastradas" />
+        </f:facet>
+        <p:column width="10" >
+            <p:commandLink id="visClienteFil" title="Visualizar" rendered="#{clienteCtrl.visualizarState}"
+                           action="#{clienteCtrl.editarFilial(fil)}" ajax="false" update="@all" >
+                <h:graphicImage value="images/custom/search-icon24.png"/>
+            </p:commandLink>
+            <p:commandLink id="ediClienteFil" title="Editar" rendered="#{!clienteCtrl.visualizarState}"
+                           action="#{clienteCtrl.editarFilial(fil)}" ajax="false" update="@all" >
+                <h:graphicImage value="images/custom/edit-icon24.png"/>
+            </p:commandLink>
+            <p:spacer width="10"/>
+            <p:commandLink id="remClienteFil" title="Remover" rendered="#{!clienteCtrl.visualizarState}"
+                           action="#{clienteCtrl.removerFilial(fil)}" ajax="false" update="@all" >
+                <h:graphicImage value="images/custom/remove-icon24.png"/>
+            </p:commandLink>
+        </p:column>
+        <p:column headerText="Nome Fantasia">
+            <p:outputLabel value="#{fil.nome}"/>
+        </p:column>
+        <p:column headerText="Razão Social">
+            <p:outputLabel value="#{fil.razaoSocial}"/>
+        </p:column>
+
+        <p:column headerText="CPF/CNPJ">
+            <p:outputLabel value="#{fil.cpfcnpj}"/>
+        </p:column>
+
+        <p:column headerText="Telefone(s)">
+            <p:outputLabel value="#{fil.contato.telefone1}
+                               +' - '+ #{fil.contato.telefone2}
+                               +' - '+ #{fil.contato.telefone3}"/>
+        </p:column>
+    </p:dataTable>
+</ui:composition>

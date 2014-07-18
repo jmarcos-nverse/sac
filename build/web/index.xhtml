@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<ui:composition template="/template/template.xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core">
+
+
+
+    <ui:define  name="content">
+        <p:panel style="height: 400px" >
+            <p:carousel id="carrossel" value="#{recadoCtrl.listaRecadosvalidos}"
+                        var="aviso" circular="true" vertical="false"
+                        numVisible="1" autoPlayInterval="10000" >
+                <f:facet name="header"  >
+                    Quadro de Avisos
+                </f:facet>
+                <p:scrollPanel style="height:300px; width: 500px; border:none"
+                               mode="native">
+                    <h:outputText value="#{aviso.mensagem}" escape="false" />
+                </p:scrollPanel>
+                <h:outputText value="#{aviso.responsavel}" escape="false" />
+            </p:carousel>
+
+        </p:panel>
+    </ui:define>
+</ui:composition>

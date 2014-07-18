@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<ui:composition template="/template/template.xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core">
+
+
+
+    <ui:define  name="content">
+        <p:panel header="Recados" >
+        
+        <p:panelGrid columns="6">
+            
+            <p:outputLabel value="Responsável" />
+            <p:inputText value="#{recadoCtrl.recado.responsavel}" readonly="#{recadoCtrl.visualizarState}" />
+            <p:outputLabel value="Data Início" />
+            <p:calendar pattern="dd/MM/yyyy" value="#{recadoCtrl.recado.dataInicio}" readonly="#{recadoCtrl.visualizarState}"/>
+            <p:outputLabel value="Data Fim" />
+            <p:calendar pattern="dd/MM/yyyy"  value="#{recadoCtrl.recado.dataFim}" readonly="#{recadoCtrl.visualizarState}"/>
+            
+        </p:panelGrid>
+        <p:panelGrid columns="1">
+            <p:outputLabel value="Mensagem" />
+            <p:inputTextarea rows="4" cols="80" autoResize="false" readonly="#{recadoCtrl.visualizarState}"
+                value="#{recadoCtrl.recado.mensagem}"/>
+        </p:panelGrid>
+        <p:spacer height="10"/>
+        <p:panelGrid columns="2">
+            <p:commandButton value="Adicionar" action="#{recadoCtrl.salvarEntidade()}"
+                             update="@all" ajax="false" rendered="#{!recadoCtrl.visualizarState}" />
+            <p:commandButton value="Limpar" action="#{recadoCtrl.prepararAdicionar()}"
+                             update="@all" ajax="false" rendered="#{!recadoCtrl.visualizarState}"/>
+        </p:panelGrid>
+        <p:spacer height="10"/>
+        <p:panelGrid columns="1">
+            <p:dataTable value="#{recadoCtrl.listaRecados}" var="rec"
+                         emptyMessage="Nenhum Recado" rowStyleClass="#{(recadoCtrl.listaRecados.indexOf(rec) %2 == 0) ? 'linhaPar' : 'linhaImpar'}"
+                         paginator="true" rows="10" currentPageReportTemplate="{currentPage} de {totalPages}"
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink}
+                         {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}
+                         {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,20,50,100" >
+                <f:facet name="header" >
+                    Recados
+                </f:facet>
+                <p:column >
+                    <p:commandLink id="visRecado" title="Visualizar"
+                                   action="#{recadoCtrl.visualizarRecado(rec)}"
+                                   ajax="false" update="@all" >
+                        <p:graphicImage value="images/custom/search-icon24.png"/>
+                    </p:commandLink>
+                    <p:commandLink id="editRecado" title="Visualizar"
+                                   action="#{recadoCtrl.editarRecado(rec)}"
+                                   ajax="false" update="@all" >
+                        <p:graphicImage value="images/custom/edit-icon24.png"/>
+                    </p:commandLink>
+                    <p:commandLink title="Excluir"
+                                   onclick="confirmation.show()">
+                        <p:graphicImage value="images/custom/remove-icon24.png"/>
+                    </p:commandLink>
+
+                    <p:confirmDialog id="confirmDialog" message="Deseja realmente excluir esse Recado?"
+                                     header="Confirmação" severity="alert" widgetVar="confirmation"
+                                     style="font-size: 85%">
+                        <p:commandButton id="sim" value="Sim" oncomplete="confirmation.hide()"
+                                         update="@all" ajax="false" action="#{recadoCtrl.remover(rec)}" />
+                        <p:commandButton id="nao" value="Não" onclick="confirmation.hide()" type="button" />
+                    </p:confirmDialog>
+                </p:column>
+                <p:column headerText="Data publicação" width="50">
+                    <p:outputLabel value="#{recadoCtrl.obtenhaDataParaExibicao(rec.dataInicio)}" />
+                </p:column>
+                <p:column headerText="Data fim" width="50" >
+                    <p:outputLabel value="#{recadoCtrl.obtenhaDataParaExibicao(rec.dataFim)}" />
+                </p:column>
+                <p:column headerText="Responsável">
+                    <p:outputLabel value="#{rec.responsavel}" />
+                </p:column>
+                <p:column width="50" >
+                    <f:facet name="header">
+                        <p:outputLabel value="Mensagem"/>
+                    </f:facet>
+                    <p:outputLabel value="#{rec.mensagemParaExibicao}" />
+                </p:column>
+            </p:dataTable>
+            
+        </p:panelGrid>
+        </p:panel>
+    </ui:define>
+</ui:composition>
+

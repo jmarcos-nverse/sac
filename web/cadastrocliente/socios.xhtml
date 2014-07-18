@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<ui:composition 
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:f="http://java.sun.com/jsf/core">
+
+    <p:fieldset toggleable="true" legend="Dados do Sócio">
+        <h:panelGrid columns="2">
+
+            <p:outputLabel value="CPF:"/>
+            <p:inputMask value="#{clienteCtrl.socio.cpfcnpj}" mask="999.999.999-99"
+                             valueChangeListener="#{clienteCtrl.validateCpf}" readonly="#{clienteCtrl.visualizarState}">
+                    <f:ajax  event="blur" render="nameErrorSoc" />
+                </p:inputMask>
+                <p:spacer/>
+                <h:outputText id="nameErrorSoc" value="#{clienteCtrl.nameErro}"
+                              style="color: green;font-style: italic; font-size: 90%" />
+            <p:outputLabel value="Nome:"/>
+            <p:inputText value="#{clienteCtrl.socio.nome}" readonly="#{clienteCtrl.visualizarState}"/>
+            <p:outputLabel value="E-Mail:"/>
+            <p:inputText value="#{clienteCtrl.socio.contato.email}" readonly="#{clienteCtrl.visualizarState}"/>
+            <p:outputLabel value="Telefone:"/>
+            <p:inputMask value="#{clienteCtrl.socio.contato.telefone1}" mask="(99)9999-9999" readonly="#{clienteCtrl.visualizarState}"/>
+            <p:outputLabel value="Celular:"/>
+            <p:inputMask value="#{clienteCtrl.socio.contato.telefone2}" mask="(99)9999-9999" readonly="#{clienteCtrl.visualizarState}"/>
+            <!--            <p:outputLabel value="Natureza:"/>
+                        <p:inputText value="#{clienteCtrl.socio}"/>-->
+
+
+        </h:panelGrid>
+    </p:fieldset>
+    <p:commandButton value="Gravar" ajax="false" action="#{clienteCtrl.adicionaSocioAtual()}"  rendered="#{!clienteCtrl.visualizarState}"/>
+    <p:commandButton value="Limpar" action="#{clienteCtrl.limpaSocioAtual()}" update="@form"  rendered="#{!clienteCtrl.visualizarState}"  />
+    
+    <p:spacer/>
+    <p:dataTable value="#{clienteCtrl.cliente.socios}" var="soc" emptyMessage="Não há nenhum sócio cadastrado para esse cliente.">
+        <f:facet name="header" >
+            <p:outputLabel value="Sócios Cadastrados" />
+        </f:facet>
+        <p:column width="10" >
+            <p:commandLink id="visClienteSoc" title="Visualizar" rendered="#{clienteCtrl.visualizarState}"
+                           action="#{clienteCtrl.editarSocio(soc)}" ajax="false" update="@all" >
+                <h:graphicImage value="images/custom/search-icon24.png"/>
+            </p:commandLink>
+            <p:commandLink id="ediClienteSoc" title="Editar" rendered="#{!clienteCtrl.visualizarState}"
+                           action="#{clienteCtrl.editarSocio(soc)}" ajax="false" update="@all" >
+                <h:graphicImage value="images/custom/search-icon24.png"/>
+            </p:commandLink>
+            <p:spacer width="10"/>
+            <p:commandLink id="remClienteSoc" title="Remover" rendered="#{!clienteCtrl.visualizarState}"
+                           action="#{clienteCtrl.removerSocio(soc)}" ajax="false" update="@all" >
+                <h:graphicImage value="images/custom/search-icon24.png"/>
+            </p:commandLink>
+        </p:column>
+        <p:column headerText="CPF">
+            <p:outputLabel value="#{soc.cpfcnpj}"/>
+        </p:column>
+        <p:column headerText="Nome">
+            <p:outputLabel value="#{soc.nome}"/>
+        </p:column>
+        <p:column headerText="E-Mail">
+            <p:outputLabel value="#{soc.contato.email}"/>
+        </p:column>
+        <p:column headerText="Telefone">
+            <p:outputLabel value="#{soc.contato.telefone1}"/>
+        </p:column>
+        <!--        <p:column headerText="Natureza">
+                    <p:outputLabel value=""/>
+                </p:column>-->
+    </p:dataTable>
+
+</ui:composition>
+

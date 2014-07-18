@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+
+<ui:composition 
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:f="http://java.sun.com/jsf/core">
+
+
+        <p:fieldset legend="Dados do Agregado" >
+            <p:panelGrid columns="2" >
+
+                <p:outputLabel value="CPF/CNPJ:"/>
+                <p:inputMask mask="99.999.999/9999-99" value="#{clienteCtrl.agregadoAtual.cpfcnpj}" />
+                
+                <p:outputLabel value="Razão Social:"/>
+                <p:inputText value="#{clienteCtrl.agregadoAtual.razaoSocial}" readonly="#{clienteCtrl.visualizarState}"/>
+                <p:outputLabel value="Nome Fantasia:"/>
+                <p:inputText value="#{clienteCtrl.agregadoAtual.nome}" readonly="#{clienteCtrl.visualizarState}"/>
+
+
+            </p:panelGrid>
+        </p:fieldset>
+
+        <p:fieldset legend="Contato">
+            <p:panelGrid columns="6" >
+                <p:outputLabel value="Telefone 1:"/>
+                <p:inputText value="#{clienteCtrl.agregadoAtual.contato.telefone1}" readonly="#{clienteCtrl.visualizarState}"/>
+                <p:outputLabel value="Telefone 2:"/>
+                <p:inputText value="#{clienteCtrl.agregadoAtual.contato.telefone2}" readonly="#{clienteCtrl.visualizarState}"/>
+                <p:outputLabel value="Telefone 3:"/>
+                <p:inputText value="#{clienteCtrl.agregadoAtual.contato.telefone3}" readonly="#{clienteCtrl.visualizarState}"/>
+                <p:outputLabel value="E-Mail:"/>
+                <p:inputText value="#{clienteCtrl.agregadoAtual.contato.email}" readonly="#{clienteCtrl.visualizarState}"/>
+            </p:panelGrid>
+        </p:fieldset>
+
+        <p:commandButton value="Gravar" ajax="false" id="btnAddAgregado" action="#{clienteCtrl.adicionaAgregadoAtual()}"
+                         rendered="#{!clienteCtrl.visualizarState}" update="@form"/>
+        <p:commandButton value="Limpar" action="#{clienteCtrl.limpaAgregadoAtual()}" update="@form"  rendered="#{!clienteCtrl.visualizarState}"  />
+
+        <p:dataTable value="#{clienteCtrl.cliente.agregados}" var="agr" 
+                     emptyMessage="Não há nenhum agregado cadastrado para esse cliente.">
+            <f:facet name="header" >
+                <p:outputLabel value="Agregados Cadastrados" />
+            </f:facet>
+            <p:column width="10" >
+                <p:commandLink id="visClienteAgr" title="Visualizar" rendered="#{clienteCtrl.visualizarState}"
+                               action="#{clienteCtrl.editarAgregado(agr)}" ajax="false" update="@all" >
+                <h:graphicImage value="images/custom/search-icon24.png"/>
+            </p:commandLink>
+                <p:commandLink id="ediClienteAgr" title="Editar" rendered="#{!clienteCtrl.visualizarState}"
+                               action="#{clienteCtrl.editarAgregado(agr)}" ajax="false" update="@all" >
+                <h:graphicImage value="images/custom/edit-icon24.png"/>
+            </p:commandLink>
+            <p:spacer width="10"/>
+            <p:commandLink id="remClienteAgr" title="Remover" rendered="#{!clienteCtrl.visualizarState}"
+                           action="#{clienteCtrl.removerAgregado(agr)}" ajax="false" update="@all" >
+                <h:graphicImage value="images/custom/remove-icon24.png"/>
+            </p:commandLink>
+            </p:column>
+            <p:column headerText="Nome Fantasia">
+                <p:outputLabel value="#{agr.nome}"/>
+            </p:column>
+            <p:column headerText="Razão Social">
+                <p:outputLabel value="#{agr.razaoSocial}"/>
+            </p:column>
+
+            <p:column headerText="CPF/CNPJ">
+                <p:outputLabel value="#{agr.cpfcnpj}"/>
+            </p:column>
+            <p:column headerText="Telefone(s)">
+                <p:outputLabel value="#{agr.contato.telefone1}
+                               +' - '+ #{agr.contato.telefone2}
+                               +' - '+ #{agr.contato.telefone3}"/>
+            </p:column>
+        </p:dataTable>
+</ui:composition>

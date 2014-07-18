@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<ui:composition 
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:f="http://java.sun.com/jsf/core">
+
+    <p:fieldset legend="Dados do Veículo" id="panelVeiculos" >
+        <p:panelGrid columns="2">
+
+            <p:outputLabel value="Placa:"/>
+            <p:inputMask mask="aaa-9999" style="text-transform: uppercase" value="#{clienteCtrl.veiculo.placa}" readonly="#{clienteCtrl.visualizarState}" />
+            <p:outputLabel value="UF:"/>
+            <p:selectOneMenu value="#{clienteCtrl.veiculo.uf}"  style="width: 70px" panelStyle="width: 50px" rendered="#{!clienteCtrl.visualizarState}"  >
+                <f:selectItem itemLabel="---" itemValue="#{null}" />
+                <f:selectItems value="#{clienteCtrl.ufs}" var="uf"  />
+            </p:selectOneMenu>
+            <p:inputText size="5" readonly="true" value="#{clienteCtrl.veiculo.uf}" rendered="#{clienteCtrl.visualizarState}" />
+
+            <p:outputLabel value="Ano/Modelo:"/>
+            <p:inputMask mask="99/99" value="#{clienteCtrl.veiculo.anoModelo}" readonly="#{clienteCtrl.visualizarState}"/>
+            <p:outputLabel value="Renavam:"/>
+            <p:inputMask mask="99999999-9" value="#{clienteCtrl.veiculo.renavam}" readonly="#{clienteCtrl.visualizarState}"/>
+            <p:outputLabel value="Marca:"/>
+            <p:inputText value="#{clienteCtrl.veiculo.marca}" readonly="#{clienteCtrl.visualizarState}"/>
+            <p:outputLabel value="Capacidade:"/>
+            <p:inputText value="#{clienteCtrl.veiculo.capacidade}" readonly="#{clienteCtrl.visualizarState}"/>
+            <!--            <p:outputLabel value="Propriedade:"/>
+                        <p:selectOneMenu value="#{clienteCtrl.veiculo.dono}" >
+                            <f:selectItem itemLabel="Selecione" itemValue="#{null}"/>
+                            <f:selectItem itemLabel="PrÃ³prio" itemValue="#{clienteCtrl.cliente}"/>
+                            <f:selectItems value="#{clienteCtrl.cliente.agregados}"
+                                           var="agr" itemLabel="#{agr.razaoSocial}" />
+                        </p:selectOneMenu>-->
+
+
+        </p:panelGrid>
+    </p:fieldset>
+    <p:commandButton value="Gravar" action="#{clienteCtrl.adicionaVeiculoAtual()}" ajax="false" update="panelVeiculos, datavc" rendered="#{!clienteCtrl.visualizarState}" />
+        <p:commandButton value="Limpar" action="#{clienteCtrl.limpaVeiculoAtual()}" update="panelVeiculos"  rendered="#{!clienteCtrl.visualizarState}"  />
+    
+    <p:spacer />
+    <p:dataTable id="datavc" value="#{clienteCtrl.cliente.veiculos}" var="vei" emptyMessage="Não há nenhum veículo cadastrado para esse cliente." >
+        <f:facet name="header" >
+            <p:outputLabel value="Veículos Cadastrados" />
+        </f:facet>
+        <p:column width="10" >
+            <p:commandLink id="visClienteVeic" title="Visualizar" rendered="#{clienteCtrl.visualizarState}"
+                           action="#{clienteCtrl.editarVeiculo(vei)}" ajax="false" update="@all" >
+                <h:graphicImage value="images/custom/search-icon24.png"/>
+            </p:commandLink>
+            <p:commandLink id="ediClienteVeic" title="Editar" rendered="#{!clienteCtrl.visualizarState}"
+                           action="#{clienteCtrl.editarVeiculo(vei)}" ajax="false" update="@all" >
+                <h:graphicImage value="images/custom/edit-icon24.png"/>
+            </p:commandLink>
+            <p:spacer width="10"/>
+            <p:commandLink id="remClienteVeic" title="Remover" rendered="#{!clienteCtrl.visualizarState}"
+                           action="#{clienteCtrl.removerVeiculo(vei)}" ajax="false" update="@all" >
+                <h:graphicImage value="images/custom/remove-icon24.png"/>
+            </p:commandLink>
+        </p:column>
+        <p:column headerText="Placa">
+            <p:outputLabel value="#{vei.placa}"/>
+        </p:column>
+        <p:column headerText="Ano/Modelo">
+            <p:outputLabel value="#{vei.anoModelo}"/>
+        </p:column>
+        <p:column headerText="Marca">
+            <p:outputLabel value="#{vei.marca}"/>
+        </p:column>
+        <p:column headerText="Capacidade">
+            <p:outputLabel value="#{vei.capacidade}"/>
+        </p:column>
+    </p:dataTable>
+</ui:composition>

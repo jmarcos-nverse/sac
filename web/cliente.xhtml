@@ -1,0 +1,123 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+
+<ui:composition template="/template/template.xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core">
+
+
+
+    <ui:define  name="content">
+        
+        <p:tabView  rendered="#{clienteCtrl.adicionarState || clienteCtrl.editarState || clienteCtrl.visualizarState}" >
+
+            <p:tab title="Geral" >
+                <ui:include src="/cadastrocliente.xhtml"/>
+            </p:tab>
+            <p:tab title="Histórico">
+                <ui:include src="/cadastrocliente/historico.xhtml"/>
+            </p:tab>
+            <p:tab title="Agregados" >
+                <ui:include src="/cadastrocliente/agregados.xhtml"/>
+            </p:tab>
+        </p:tabView>
+
+        <p:panel header="Clientes" rendered="#{clienteCtrl.pesquisarState}" style="border-top: none">
+            <p:panelGrid  columns="2"  >
+
+                <p:outputLabel value="Código"/>
+                <p:inputText label="Código" title="Código"
+                             value="#{clienteCtrl.codigoPequisa}" size="30">
+<!--                             valueChangeListener="" >
+                    <f:ajax  event="keyup" render="tableCliente" />-->
+                </p:inputText>
+
+                <p:outputLabel value="Nome"/>
+                <p:inputText label="Nome Fantasia/Razão Social"
+                             title="Nome Fantasia / Razão Social"
+                             value="#{clienteCtrl.nomePequisa}" size="70">
+<!--                             valueChangeListener="" >
+                    <f:ajax  event="keyup" render="@form" />-->
+                </p:inputText>
+
+                <p:outputLabel value="Placa"/>
+                <p:inputText label="Placa" title="Placa" value="#{clienteCtrl.placaPequisa}"
+                             size="30" />
+
+                <p:outputLabel value="UF:"/>
+                <p:selectOneMenu value="#{clienteCtrl.ufPequisa}" style="width: 50px">
+                    <f:selectItem itemValue="---" itemLabel="---"/>
+                    <f:selectItems value="#{clienteCtrl.ufs}" var="uf"  />
+                </p:selectOneMenu>
+                
+                <p:outputLabel value="Situação:"/>
+                <p:selectOneMenu value="#{clienteCtrl.sitContratoPesquisa}" >
+                    <f:selectItem itemValue="Todos" itemLabel="Todos"/>
+                    <f:selectItems value="#{clienteCtrl.sitsContrato}" var="sits"  />
+                </p:selectOneMenu>
+
+                <p:commandButton id="btnPesqCliente" value="Pesquisar" style="font-size: 85%"
+                                 action="#{clienteCtrl.listaPorCampos()}" ajax="false" update="@form"/>
+
+
+
+                <p:commandButton id="btnAddNew" value="Adicionar Novo" style="font-size: 85%"
+                                 action="#{clienteCtrl.prepararAdicionar()}" ajax="false" update="@form"/>
+            </p:panelGrid>
+            <p:spacer height="10"/>
+            <p:dataTable id="tableCliente" value="#{clienteCtrl.listaClientes}"
+                         var="cli" emptyMessage="" rowStyleClass="#{(clienteCtrl.listaClientes.indexOf(cli) %2 == 0) ? 'linhaPar' : 'linhaImpar'}"
+                         paginator="true" rows="50" currentPageReportTemplate="{currentPage} de {totalPages}"
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink}
+                         {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}
+                         {RowsPerPageDropdown}" rowsPerPageTemplate="25,50,100,150" >   
+
+                <p:column width="45">
+                    <p:commandLink id="visCliente" title="Visualizar" action="#{clienteCtrl.visualizarCliente(cli)}" ajax="false" update="@all" >
+                        <p:graphicImage value="images/custom/search-icon24.png"/>
+                    </p:commandLink>
+                    <p:spacer width="10"/>
+
+                    <p:commandLink id="ediCliente" title="Editar" action="#{clienteCtrl.editarCliente(cli)}" ajax="false" update="@all" >
+                        <p:graphicImage value="images/custom/edit-icon24.png"/>
+                    </p:commandLink>
+                    <p:spacer width="10"/>
+
+                    <p:commandLink title="Excluir"
+                                   onclick="confirmation.show(); confirmation.content.parent().css('top',  '100px')">
+                        <p:graphicImage value="images/custom/remove-icon24.png"/>
+                    </p:commandLink>
+
+                    <p:confirmDialog id="confirmDialog" message="Deseja realmente excluir esse Cliente?"
+                                     header="Confirmação" severity="alert" widgetVar="confirmation"
+                                     style="font-size: 85%;">
+                        <p:commandButton id="sim" value="Sim" oncomplete="confirmation.hide()"
+                                         update="@all" ajax="false" action="#{clienteCtrl.remover(cli)}" />
+                        <p:commandButton id="nao" value="Não" onclick="confirmation.hide()" type="button" />
+                    </p:confirmDialog>
+                </p:column>
+                <p:column headerText="Código" sortBy="codigo" >
+                    <p:outputLabel value="#{cli.codigo}"/>
+                </p:column>
+                <p:column headerText="Nome Fantasia" sortBy="nome">
+                    <p:commandLink value="#{cli.nome}" action="#{clienteCtrl.visualizarCliente(cli)}" ajax="false" update="@all"  />
+                </p:column>
+                <p:column headerText="CNPJ">
+                    <p:outputLabel value="#{cli.cpfcnpj}"/>
+                </p:column>
+                <p:column headerText="Razão Social" sortBy="razaoSocial">
+                    <p:outputLabel value="#{cli.razaoSocial}"/>
+                </p:column>
+                <p:column headerText="Situação" >
+                    <p:graphicImage value="#{clienteCtrl.obtenhaIconeSituacao(cli)}"
+                                    title="#{cli.contratos.get(0).situacao.valor}"/>
+                </p:column>
+
+            </p:dataTable>
+
+        </p:panel>
+
+    </ui:define>
+
+</ui:composition>

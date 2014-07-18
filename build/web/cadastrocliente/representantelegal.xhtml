@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<ui:composition 
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:f="http://java.sun.com/jsf/core">
+    <f:view contentType="text/html; charset=ISO-8859-1">
+        <p:fieldset toggleable="true" legend="Dados do Representante">
+            <p:panelGrid columns="2" >
+                <p:outputLabel value="CPF:"/>
+                <p:inputMask value="#{clienteCtrl.representante.cpfcnpj}" mask="999.999.999-99"
+                             valueChangeListener="#{clienteCtrl.validateCpf}" readonly="#{clienteCtrl.visualizarState}">
+                    <f:ajax  event="blur" render="nameErrorRep" />
+                </p:inputMask>
+                <p:spacer/>
+                <h:outputText id="nameErrorRep" value="#{clienteCtrl.nameErro}"
+                              style="color: green;font-style: italic; font-size: 90%" />
+                <p:outputLabel value="Nome:"/>
+                <p:inputText value="#{clienteCtrl.representante.nome}" readonly="#{clienteCtrl.visualizarState}"/>
+                <p:outputLabel value="E-Mail:"/>
+                <p:inputText value="#{clienteCtrl.representante.contato.email}" readonly="#{clienteCtrl.visualizarState}"/>
+                <p:outputLabel value="Telefone 1:"/>
+                <p:inputMask value="#{clienteCtrl.representante.contato.telefone1}" mask="(99)9999-9999" readonly="#{clienteCtrl.visualizarState}"/>
+                <p:outputLabel value="Telefone 2:"/>
+                <p:inputMask value="#{clienteCtrl.representante.contato.telefone2}" mask="(99)9999-9999" readonly="#{clienteCtrl.visualizarState}"/>
+                <p:outputLabel value="Celular:"/>
+                <p:inputMask value="#{clienteCtrl.representante.contato.telefone3}" mask="(99)9999-9999" readonly="#{clienteCtrl.visualizarState}"/>
+
+
+            </p:panelGrid>
+        </p:fieldset>
+        <p:commandButton value="Gravar" ajax="false" action="#{clienteCtrl.adicionaRepresentanteAtual()}"  rendered="#{!clienteCtrl.visualizarState}" />
+        <p:commandButton value="Limpar" action="#{clienteCtrl.limpaRepresentanteAtual()}" update="@form"  rendered="#{!clienteCtrl.visualizarState}"  />
+
+
+        <p:spacer/>
+        <p:dataTable value="#{clienteCtrl.cliente.representantes}" var="rep"  emptyMessage="Não há nenhum representante cadastrado para esse cliente.">
+            <f:facet name="header" >
+                <p:outputLabel value="Representantes Cadastrados" style="font-style: normal" />
+            </f:facet>
+            <p:column width="10" >
+                <p:commandLink id="visClienteVeic" title="Visualizar" rendered="#{clienteCtrl.visualizarState}"
+                               action="#{clienteCtrl.editarRepresentante(rep)}" ajax="false" update="@all" >
+                    <h:graphicImage value="images/custom/search-icon24.png"/>
+                </p:commandLink>
+                <p:commandLink id="ediClienteVeic" title="Editar" rendered="#{!clienteCtrl.visualizarState}"
+                               action="#{clienteCtrl.editarRepresentante(rep)}" ajax="false" update="@all" >
+                    <h:graphicImage value="images/custom/edit-icon24.png"/>
+                </p:commandLink>
+                <p:spacer width="10"/>
+                <p:commandLink id="remClienteVeic" title="Remover" rendered="#{!clienteCtrl.visualizarState}"
+                               action="#{clienteCtrl.removerRepresentante(rep)}" ajax="false" update="@all" >
+                    <h:graphicImage value="images/custom/remove-icon24.png"/>
+                </p:commandLink>
+            </p:column>
+            <p:column headerText="CPF">
+                <p:outputLabel value="#{rep.cpfcnpj}"/>
+            </p:column>
+            <p:column headerText="Nome">
+                <p:outputLabel value="#{rep.nome}"/>
+            </p:column>
+            <p:column headerText="E-Mail">
+                <p:outputLabel value="#{rep.contato.email}"/>
+            </p:column>
+            <p:column headerText="Telefone">
+                <p:outputLabel value="#{rep.contato.telefone1}
+                               + ' - ' +#{rep.contato.telefone2}"/>
+            </p:column>
+            <p:column headerText="Celular">
+                <p:outputLabel value="#{rep.contato.telefone3}"/>
+            </p:column>
+        </p:dataTable>
+
+    </f:view>
+</ui:composition>

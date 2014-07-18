@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+
+<ui:composition template="/template/template.xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core">
+
+
+
+    <ui:define  name="content">
+        
+        <p:fieldset legend="Relatório de Clientes por Estado" >
+            
+            <p:donutChart id="custom" value="#{relatorioCtrl.obtenhaRelatorioClientesPorEstado()}"
+                          legendPosition="e" legendCols="3" dataFormat="label" showDataLabels="true"
+                title="Clientes por Estado" style="height:600px; font-weight: bold" sliceMargin="5"  />  
+            
+        </p:fieldset>
+        <p:fieldset legend="Relatorio PDF" >
+            <h:commandButton value="Ver relatorio"
+                             action="#{relatorioCtrl.gereRelatorioClientesValor()}" onclick="this.form.target='_blank'" />
+        </p:fieldset>
+        <p:fieldset legend="Relatorio ANTT" >
+            <h:commandButton value="Ver relatorio"
+                             action="#{relatorioCtrl.gereRelatorioANTT()}"  />
+        </p:fieldset>
+    </ui:define>
+</ui:composition>
+

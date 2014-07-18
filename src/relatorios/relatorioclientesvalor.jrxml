@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="relatorioclientesvalor" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="735faed8-587e-4d04-9fd8-dc4de7cb82bc">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="UF" class="java.lang.String">
+		<fieldDescription><![CDATA[UF]]></fieldDescription>
+	</field>
+	<field name="class" class="java.lang.Class">
+		<fieldDescription><![CDATA[class]]></fieldDescription>
+	</field>
+	<field name="contrato" class="java.lang.String">
+		<fieldDescription><![CDATA[contrato]]></fieldDescription>
+	</field>
+	<field name="nomeFantasia" class="java.lang.String">
+		<fieldDescription><![CDATA[nomeFantasia]]></fieldDescription>
+	</field>
+	<field name="razaoSocial" class="java.lang.String">
+		<fieldDescription><![CDATA[razaoSocial]]></fieldDescription>
+	</field>
+	<field name="valorPorOnibus" class="java.lang.Double">
+		<fieldDescription><![CDATA[valorPorOnibus]]></fieldDescription>
+	</field>
+	<field name="valorTotal" class="java.lang.Double">
+		<fieldDescription><![CDATA[valorTotal]]></fieldDescription>
+	</field>
+	<variable name="valorTotal_1" class="java.lang.Double" resetGroup="UF" calculation="Sum">
+		<variableExpression><![CDATA[$F{valorTotal}]]></variableExpression>
+	</variable>
+	<variable name="valorTotal_2" class="java.lang.Double" resetType="Group" resetGroup="UF" calculation="Sum">
+		<variableExpression><![CDATA[$F{valorTotal}]]></variableExpression>
+	</variable>
+	<group name="UF" keepTogether="true">
+		<groupExpression><![CDATA[$F{UF}]]></groupExpression>
+		<groupHeader>
+			<band height="58" splitType="Prevent">
+				<frame>
+					<reportElement mode="Opaque" x="-20" y="0" width="595" height="38" backcolor="#006699" uuid="f455d020-0418-414e-a61c-8942749139e2"/>
+					<textField>
+						<reportElement x="37" y="5" width="100" height="29" forecolor="#FFFFFF" uuid="c3086c95-d3bd-40e9-8cee-a457d0736b50"/>
+						<textElement>
+							<font size="18" isBold="true"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{UF}]]></textFieldExpression>
+					</textField>
+				</frame>
+				<staticText>
+					<reportElement mode="Opaque" x="425" y="38" width="74" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="ade2da1f-472f-48ef-bc4a-9aa8a6e2c679"/>
+					<textElement>
+						<font size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Valor Un.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="88" y="38" width="169" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="2195b3b8-188b-4798-beac-81ea5b993739"/>
+					<textElement>
+						<font size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Fantasia]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="257" y="38" width="168" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="17cde81b-c9a3-4759-8b8b-2e3c0d0c56ab"/>
+					<textElement>
+						<font size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Razão Social]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="499" y="38" width="57" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="81137fc0-6ab9-40e8-b8f1-fa91c50bedcd"/>
+					<textElement>
+						<font size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Valor]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="38" width="88" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="51e979cd-1722-4413-960e-e1525fe8ae8f"/>
+					<textElement>
+						<font size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Contrato]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="22">
+				<staticText>
+					<reportElement mode="Opaque" x="375" y="1" width="113" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="459ab91e-ad99-4be5-b9cc-a2ceb1edf00d"/>
+					<textElement>
+						<font size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Valor Estadual:]]></text>
+				</staticText>
+				<textField evaluationTime="Group" evaluationGroup="UF">
+					<reportElement mode="Opaque" x="488" y="1" width="67" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="c28ff9fc-c018-42e6-9f98-94864fd969be"/>
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" markup="none">
+						<font fontName="SansSerif" size="14" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{valorTotal_2}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="58">
+			<frame>
+				<reportElement mode="Opaque" x="-20" y="-16" width="595" height="74" backcolor="#006699" uuid="311be45f-92a9-40b2-b2fe-8fb8d15c7066"/>
+				<staticText>
+					<reportElement x="20" y="20" width="234" height="43" forecolor="#FFFFFF" uuid="14794f38-a3e7-413c-a520-e30c56b5ce14"/>
+					<textElement>
+						<font size="34" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Clientes SAC]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="395" y="43" width="180" height="20" forecolor="#FFFFFF" uuid="fee8b0c8-28a7-45c6-a019-91aa4d135ca9"/>
+					<textElement textAlignment="Right">
+						<font size="14" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Clientes e valores]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="2"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="2">
+			<line>
+				<reportElement x="-20" y="0" width="595" height="1" forecolor="#666666" uuid="147878a9-31f2-4124-89fc-6bdf3921a9cf"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="23">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="22" width="555" height="1" uuid="f3483930-094d-470e-8639-1ae17f6f407f"/>
+			</line>
+			<textField>
+				<reportElement x="0" y="0" width="87" height="20" uuid="6cdb35e9-2cb4-4700-9074-9bf44d166db7"/>
+				<textFieldExpression><![CDATA[$F{contrato}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="87" y="0" width="169" height="20" uuid="1d789a9a-8b59-409c-872d-0ceb21a53e46"/>
+				<textFieldExpression><![CDATA[$F{nomeFantasia}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="256" y="0" width="168" height="20" uuid="d5e86f07-3c7a-4a29-80d3-ca1971234da6"/>
+				<textFieldExpression><![CDATA[$F{razaoSocial}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="424" y="0" width="74" height="20" uuid="ab7a273b-1340-44b6-ba45-5fe393ecf84e"/>
+				<textFieldExpression><![CDATA[$F{valorPorOnibus}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="498" y="0" width="56" height="20" uuid="a4747729-2747-420a-ab41-0afd234295dd"/>
+				<textFieldExpression><![CDATA[$F{valorTotal}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+	<pageFooter>
+		<band height="22">
+			<textField evaluationTime="Report">
+				<reportElement mode="Opaque" x="0" y="4" width="40" height="13" backcolor="#E6E6E6" uuid="9a21fd0a-41be-41e5-ac43-350c25caf439"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="40" y="4" width="100" height="13" uuid="f4c148f1-df63-495e-bb95-1e229b6eaad5"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<lastPageFooter>
+		<band height="20">
+			<staticText>
+				<reportElement mode="Opaque" x="375" y="0" width="79" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="61309721-f901-45b7-8307-0d6f022fd4d0"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Valor Total:]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Opaque" x="456" y="0" width="100" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="cb6696f3-07c9-49f4-87e3-06337e8d1a3e"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="14" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{valorTotal_1}]]></textFieldExpression>
+			</textField>
+		</band>
+	</lastPageFooter>
+	<summary>
+		<band/>
+	</summary>
+</jasperReport>

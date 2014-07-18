@@ -1,0 +1,303 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+
+<ui:composition template="/template/template.xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core">
+
+
+
+    <ui:define  name="content">
+        <!-- TELA DE PESQUISA DE PROTOCOLOS -->
+        <p:panel header="Protocolo" id="pnlPesqDetalhe" rendered="#{protocoloCtrl.pesquisarState}">
+            <p:panelGrid columns="2" >
+                <p:outputLabel value="Número do Protocolo" />
+                <p:inputText value="#{protocoloCtrl.numPesqProtocolo}" />
+                <p:outputLabel value="Contrato do Cliente" />
+                <p:inputText value="#{protocoloCtrl.contrClientPesqProtocolo}" />
+                <p:outputLabel value="Nome Fantasia/Razão Social" />
+                <p:inputText value="#{protocoloCtrl.fantasiaPesqProtocolo}" />
+            </p:panelGrid>
+            <p:commandButton value="Pesquisar" action="#{protocoloCtrl.listeProtocolosPorNomes()}"
+                             ajax="false" update="@form" />
+            <p:commandButton value="Adicionar" action="#{protocoloCtrl.prepararAdicionar()}"
+                             ajax="false" update="@form" />
+
+            <p:dataTable value="#{protocoloCtrl.listaProtocolo}" var="pro"
+                         emptyMessage="" rowStyleClass="#{(protocoloCtrl.listaProtocolo.indexOf(pro) %2 == 0) ? 'linhaPar' : 'linhaImpar'}"
+                         paginator="true" rows="50" currentPageReportTemplate="{currentPage} de {totalPages}"
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink}
+                         {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}
+                         {RowsPerPageDropdown}" rowsPerPageTemplate="25,50,100,150" >
+                <f:facet name="header">
+                    Protocolos
+                </f:facet>
+                <p:column >
+                    <p:commandLink id="visProtocolo" title="Visualizar"
+                                   action="#{protocoloCtrl.visualizarProtocolo(pro)}"
+                                   ajax="false" update="@all" >
+                        <p:graphicImage value="images/custom/search-icon24.png"/>
+                    </p:commandLink>
+                    <p:commandLink title="Excluir"
+                                   onclick="confirmation.show()">
+                        <p:graphicImage value="images/custom/remove-icon24.png"/>
+                    </p:commandLink>
+
+                    <p:confirmDialog id="confirmDialog" message="Deseja realmente excluir esse Protocolo?"
+                                     header="Confirmação" severity="alert" widgetVar="confirmation"
+                                     style="font-size: 85%">
+                        <p:commandButton id="sim" value="Sim" oncomplete="confirmation.hide()"
+                                         update="@all" ajax="false" action="#{protocoloCtrl.remover(pro)}" />
+                        <p:commandButton id="nao" value="Não" onclick="confirmation.hide()" type="button" />
+                    </p:confirmDialog>
+                </p:column>
+                <p:column headerText="Número" >
+                    <p:outputLabel value="#{pro.numProtocolo}" />
+                </p:column>
+                <p:column headerText="N° Contrato" >
+                    <p:outputLabel value="#{pro.cliente.contratos.get(0).numeroContrato}" />
+                </p:column>
+                <p:column headerText="Nome Fantasia" width="50%" >
+                    <p:outputLabel value="#{pro.cliente.nome}" />
+                </p:column>
+                <p:column headerText="Status" >
+                    <p:outputLabel value="#{pro.status.desc}" />
+                </p:column>
+            </p:dataTable>
+
+        </p:panel>
+        <!-- FIM DA TELA DE PESQUISA DE PROTOCOLOS -->
+        <!-- TELA DE EXIBIÇÃO / CRIAÇÃO DE PROTOCOLO -->
+
+        <p:panel header="Protocolo" id="pnlAddProtocolo" rendered="#{protocoloCtrl.adicionarState || protocoloCtrl.editarState}" >
+            <p:fieldset id="fdsCliente" toggleable="true" legend="Empresa" styleClass="default" >
+                <p:panelGrid columns="5"  >
+                    <p:commandButton icon="ui-icon-search" onclick="dlgSelClient.show();" />
+                    <p:outputLabel value="Nº Contrato" />
+                    <p:inputText value="#{protocoloCtrl.protocolo.cliente.contratos.get(0).numeroContrato}"
+                                 disabled="true" />
+                    <p:outputLabel value="Nome Fantasia" />
+                    <p:inputText value="#{protocoloCtrl.protocolo.cliente.nome}" size="50" disabled="true" />
+                </p:panelGrid>
+            </p:fieldset>
+            <p:fieldset id="fdsDados" toggleable="true" legend="Dados do Contato" styleClass="default" >
+                <p:panelGrid>
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel value="Tipo de Contato" />
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu value="#{protocoloCtrl.protocolo.tipoContato}" >
+                                <f:selectItem itemLabel="----" itemValue="#{null}"/>
+                                <f:selectItems value="#{protocoloCtrl.listaTiposContato}"
+                                               var="tipo" itemLabel="#{tipo.desc}" /> 
+                            </p:selectOneMenu>
+                        </p:column>
+                        <p:column>
+                            <p:outputLabel value="Origem do Contato" />
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu value="#{protocoloCtrl.protocolo.origemContato}" >
+                                <f:selectItem itemLabel="----" itemValue="#{null}"/> 
+                                <f:selectItems value="#{protocoloCtrl.listaOrigemContato}" /> 
+                            </p:selectOneMenu>
+                        </p:column>
+                        <p:column>
+                            <p:outputLabel value="Status" />
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu value="#{protocoloCtrl.protocolo.status}" >
+                                <f:selectItem itemLabel="----" itemValue="#{null}"/>
+                                <f:selectItems value="#{protocoloCtrl.listaStatusProtocolo}"
+                                               var="status" itemLabel="#{status.desc}"/> 
+                            </p:selectOneMenu>
+                        </p:column>
+
+                    </p:row>
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel value="N° Protocolo" />
+                        </p:column>
+                        <p:column>
+                            <p:inputText value="#{protocoloCtrl.protocolo.numProtocolo}" disabled="true" />
+                        </p:column>
+                        <p:column>
+                            <p:outputLabel value="Data de Abertura" />
+                        </p:column>
+                        <p:column>
+                            <p:calendar value="#{protocoloCtrl.protocolo.dataContato}"
+                                        pattern="dd/MM/yyyy  HH:mm:ss" size="18" disabled="true" />
+                        </p:column>
+                        <p:column>
+                            <p:outputLabel value="Número de Origem" />
+                        </p:column>
+                        <p:column>
+                            <p:inputMask mask="(99)9999-9999" value="#{protocoloCtrl.protocolo.numeroOrigem}" />
+                        </p:column>
+
+                    </p:row>
+                    <p:row>
+
+                        <p:column>
+                            <p:outputLabel value="Nome do Contato" />
+                        </p:column>
+                        <p:column colspan="3">
+                            <p:inputText id="txtPessoaContato" value="#{protocoloCtrl.protocolo.pessoaContato}"
+                                         disabled="#{!protocoloCtrl.protocolo.pessoaIdentificada}" size="70" />
+
+                        </p:column>
+                        <p:column>
+                            <p:selectBooleanButton onLabel="Identificada"
+                                                   offLabel="Não Identificada"
+                                                   onIcon="ui-icon-check"
+                                                   offIcon="ui-icon-closethick"
+                                                   style="width: 200px" 
+                                                   value="#{protocoloCtrl.protocolo.pessoaIdentificada}" >
+
+                                <f:ajax onevent="blur" render="txtPessoaContato" />
+                            </p:selectBooleanButton>
+                        </p:column>
+                        <p:column>
+                            <p:selectBooleanButton onLabel="Pessoa PNE"
+                                                   offLabel="Pessoa não PNE"
+                                                   onIcon="ui-icon-check"
+                                                   offIcon="ui-icon-closethick"
+                                                   style="width: 200px"
+                                                   value="#{protocoloCtrl.protocolo.pessoaPne}" />
+                        </p:column>
+
+                    </p:row>
+                </p:panelGrid>
+            </p:fieldset>
+            <p:fieldset legend="Detalhes do Contato" toggleable="true" >
+                <p:commandButton value="Adicionar Detalhe" icon="ui-icon-plusthick"
+                                 onclick="dlgSelDetalhe.show();" />
+                <p:dataTable id="tableDetContProtocol" value="#{protocoloCtrl.protocolo.detalheContato}"
+                             var="det" emptyMessage="Nenhum detalhe selecionado"
+                             scrollable="true" rows="5" >
+
+                    <p:column width="9%">
+                        <p:commandLink title="Excluir" action="#{protocoloCtrl.removeDetalheCont(det)}" update="tableDetContProtocol" >
+                            <p:graphicImage value="images/custom/remove-icon24.png" />
+                        </p:commandLink>
+                    </p:column>
+                    <p:column headerText="Detalhe" width="20%" >
+                        <p:outputLabel value="#{det.titulo}"/>
+                    </p:column>
+                    <p:column headerText="Descrição"  width="70%">
+                        <p:outputLabel value="#{det.descricaoAutomatica}"/>
+                    </p:column>
+                </p:dataTable>
+            </p:fieldset>
+            <p:fieldset legend="Descrição do Contato" toggleable="true">
+                <p:inputTextarea rows="4" cols="150" autoResize="false" 
+                                 value="#{protocoloCtrl.protocolo.descricao}" />
+            </p:fieldset>
+            <p:panelGrid columns="2" >
+                <p:commandButton value="Salvar Protocolo" action="#{protocoloCtrl.salvarEntidade()}" ajax="false" update="@all" />
+                <p:commandButton value="Cancelar" action="#{protocoloCtrl.prepararPesquisar()}" ajax="false" update="@all" />
+            </p:panelGrid>
+        </p:panel>
+        <!-- FIM DA PARTE DE PROTOCOLO DA TELA DE EXIBIÇÃO -->
+        <!-- DIALOG PARA SELEÇÃO DE CLIENTE -->
+        <p:dialog modal="false" id="dialogSelecClienteProtocol" widgetVar="dlgSelClient" maximizable="true" closeOnEscape="true"  >
+            <p:panel >
+                <h:panelGrid  columns="2" >
+
+                    <p:outputLabel value="Código"/>
+                    <p:inputText label="Código" title="Código"
+                                 value="#{protocoloCtrl.codigoPequisaCliente}" size="30" >
+                        <f:ajax  event="keyup" render="tableClienteProt" />
+                    </p:inputText>
+
+                    <p:outputLabel value="Nome"/>
+                    <p:inputText label="Nome Fantasia/Razão Social"
+                                 title="Nome Fantasia / Razão Social"
+                                 value="#{protocoloCtrl.nomePequisaCliente}" size="70" >
+                        <f:ajax  event="keyup" render="tableClienteProt" />
+                    </p:inputText>
+
+                    <p:outputLabel value="Placa"/>
+                    <p:inputText label="Placa" title="Placa" value="#{protocoloCtrl.placaPequisaCliente}"
+                                 size="30" />
+
+                    <p:outputLabel value="UF:"/>
+                    <p:selectOneMenu value="#{protocoloCtrl.ufPequisaCliente}" style="width: 50px">
+                        <f:selectItem itemValue="---" itemLabel="---"/>
+                        <f:selectItems value="#{clienteCtrl.ufs}" var="uf"  />
+                    </p:selectOneMenu>
+
+                    <p:commandButton id="btnPesqCliente" value="Pesquisar" style="font-size: 85%"
+                                     action="#{protocoloCtrl.listaClientesPorCampos()}" update="tableClienteProt">
+                        <f:ajax event="click" render="tableClienteProt"/>
+                    </p:commandButton>
+
+                </h:panelGrid>
+                <p:spacer height="10"/>
+                <p:dataTable id="tableClienteProt" value="#{protocoloCtrl.listaClientes}"
+                             var="cli" emptyMessage="" rowStyleClass="#{(protocoloCtrl.listaClientes.indexOf(cli) %2 == 0) ? 'linhaPar' : 'linhaImpar'}"
+                             paginator="true" rows="50" currentPageReportTemplate="{currentPage} de {totalPages}"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink}
+                             {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}
+                             {RowsPerPageDropdown}" rowsPerPageTemplate="25,50,100,150" >   
+
+                    <p:column width="45">
+                        <p:commandLink id="visCliente" title="Visualizar"
+                                       action="#{protocoloCtrl.selecionarCliente(cli)}"
+                                       ajax="false" update="@all" >
+                            <p:graphicImage value="images/custom/check-icon24.png"/>
+                        </p:commandLink>
+                        <p:spacer width="10"/>
+                    </p:column>
+                    <p:column headerText="Código" sortBy="codigo" >
+                        <p:outputLabel value="#{cli.codigo}"/>
+                    </p:column>
+                    <p:column headerText="Nome Fantasia" sortBy="nome">
+                        <p:commandLink value="#{cli.nome}"
+                                       action="#{protocoloCtrl.selecionarCliente(cli)}"
+                                       ajax="false" update="@all"  />
+                    </p:column>
+                    <p:column headerText="CNPJ">
+                        <p:outputLabel value="#{cli.cpfcnpj}"/>
+                    </p:column>
+                    <p:column headerText="Razão Social" sortBy="razaoSocial">
+                        <p:outputLabel value="#{cli.razaoSocial}"/>
+                    </p:column>
+                    <p:column headerText="Situação" >
+                        <p:graphicImage value="#{clienteCtrl.obtenhaIconeSituacao(cli)}"
+                                        title="#{cli.contratos.get(0).situacao.valor}"/>
+                    </p:column>
+
+                </p:dataTable>
+
+            </p:panel>
+
+
+        </p:dialog>
+        <!-- FIM DA DIALOG PARA SELEÇÃO DE CLIENTE -->
+
+        <!-- DIALOG PARA SELEÇÃO DE DETALHE -->
+        <p:dialog modal="true" id="dialogSelecDetalheProtocol" widgetVar="dlgSelDetalhe" >
+            <p:panel id="panelSelectDetProtocolo" >
+                <p:treeTable id="treeSelecDetProt" value="#{protocoloCtrl.rootDetCont}" var="det"  
+                             selectionMode="single"  style="border: none; height: 370px"
+                             selection="#{protocoloCtrl.selectedDetContNode}" >
+                    <f:facet name="header">  
+                        Detalhes de Contato
+                    </f:facet>
+
+                    <p:column headerText="Código" style="width:100px"> 
+                        <h:outputText value="#{det.codEstruturado}" />  
+                    </p:column>
+                    <p:column headerText="Nome" style="width:250px">
+                        <p:commandLink action="#{protocoloCtrl.inserirDetCont(det)}"
+                                       value="#{det.titulo}" ajax="false" update="@form" />
+                    </p:column>
+                </p:treeTable>
+            </p:panel>
+        </p:dialog>
+        <!-- FIM DA DIALOG PARA SELEÇÃO DE DETALHE -->
+    </ui:define>
+
+</ui:composition>

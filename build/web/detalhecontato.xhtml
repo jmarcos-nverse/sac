@@ -1,0 +1,84 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<ui:composition template="/template/template.xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core">
+
+
+
+    <ui:define  name="content">
+        <p:panel>
+        <p:panelGrid columns="2" style="width: 100%;">
+            <p:panel id="pnlAddDetalhe" style="height: 400px; border: none">
+                <p:panelGrid >
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel value="Código:"/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText value="#{detalheContatoCtrl.detalheContato.codEstruturado}" disabled="true"/>
+                        </p:column>
+                        <p:column>
+                            <p:outputLabel value="Título:"/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText value="#{detalheContatoCtrl.detalheContato.titulo}"/>
+                        </p:column>
+                        <p:column>
+                            <p:outputLabel value="Pai:"/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText disabled="true" value="#{detalheContatoCtrl.detalheContato.pai.titulo}" />
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel value="Descrição:"/>
+                        </p:column>
+                        <p:column colspan="5">
+                            <p:inputTextarea cols="90" rows="4" maxlength="500"
+                                             value="#{detalheContatoCtrl.detalheContato.descricaoAutomatica}"/>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+                <p:panelGrid columns="2" >
+                    <p:commandButton value="Gravar" id="btnAddDetCont" ajax="false"
+                                     action="#{detalheContatoCtrl.salvarEntidade()}" update="@all"/>
+                    <p:commandButton value="Cancelar" id="btnCancelDetCont" ajax="false"
+                                     action="#{detalheContatoCtrl.prepararAddNovo()}" update="@all"/>
+                </p:panelGrid>
+
+            </p:panel>
+
+            <p:panel id="pnlPesqDetalhe" style="height: 400px; border: none" >
+                <p:treeTable id="treeSingleDet" value="#{detalheContatoCtrl.root}" var="node"  
+                             selectionMode="single"  style="border: none; height: 370px"
+                             selection="#{detalheContatoCtrl.selectedNode}" 
+                             rowStyleClass="#{detalheContatoCtrl.obtenhaindiceNo(node)}">
+                    <f:facet name="header">  
+                        Detalhes de Contato
+                    </f:facet>
+                    
+                    <p:column headerText="Código" style="width:100px"> 
+                        <h:outputText value="#{node.codEstruturado}" />  
+                    </p:column>
+                    <p:column headerText="Nome" style="width:250px"> 
+                        <h:outputText value="#{node.titulo}" />
+                    </p:column>
+                </p:treeTable>
+                <p:contextMenu id="menuTree" for="treeSingleDet" style="font-size: small">
+                    <p:menuitem value="Selecionar como Pai" ajax="false"
+                                action="#{detalheContatoCtrl.selecionaComoPai(node)}"
+                                update="@form" icon="ui-icon-check" />
+                    <p:menuitem value="Editar" update="@all" ajax="false" 
+                                action="#{detalheContatoCtrl.atualizar(node)}" icon="ui-icon-search" />
+                    <p:menuitem value="Excluir" update="@all" ajax="false"
+                                action="#{detalheContatoCtrl.remover(node)}" icon="ui-icon-close"/>  
+                </p:contextMenu>  
+            </p:panel>
+        </p:panelGrid>
+        </p:panel>
+    </ui:define>
+</ui:composition>
+
